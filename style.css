@@ -176,30 +176,75 @@ body::before {
 }
 .tagline { font-size: 1rem; color: var(--purple-soft); margin-top: 5px; }
 
-/* ── Profile section ─────────────────────────────────────────── */
+/* ── Profile section (legacy, kept for fallback) ─────────────── */
 .profile-section { padding: 28px 20px; }
 .profile-section h2 { font-size: 1.05rem; color: var(--text-muted); margin-bottom: 18px; letter-spacing: .05em; text-transform: uppercase; font-weight: 600; }
 .profile-grid { display: flex; flex-wrap: wrap; gap: 14px; }
 
-.profile-card {
+/* ── Veeya profile cards ─────────────────────────────────────── */
+.veeya-select {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  padding: 28px 20px 10px;
+}
+.veeya-card {
   display: flex; flex-direction: column; align-items: center;
-  gap: 8px; padding: 20px 22px;
+  gap: 8px; padding: 24px 16px 20px;
   background: var(--surface-2);
   backdrop-filter: blur(18px);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
+  border: 2px solid var(--border);
+  border-radius: var(--radius-xl);
   box-shadow: var(--shadow);
-  cursor: pointer; min-width: 120px;
-  transition: transform .18s, box-shadow .18s, border-color .18s;
+  cursor: pointer;
+  transition: transform .2s, box-shadow .2s, border-color .2s;
+  position: relative; overflow: hidden;
+  width: 100%;
 }
-.profile-card:hover { transform: translateY(-4px); border-color: var(--purple); box-shadow: var(--glow-purple), var(--shadow); }
-.profile-avatar { font-size: 2.6rem; filter: drop-shadow(0 2px 8px rgba(0,0,0,.4)); }
-.profile-pname  { font-weight: 700; font-size: .95rem; }
-.profile-grade  { font-size: .75rem; color: var(--text-muted); }
+.veeya-card:hover, .veeya-card:active {
+  transform: translateY(-5px);
+  border-color: var(--purple);
+  box-shadow: var(--glow-purple), var(--shadow-lg);
+}
+.veeya-card::before {
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient(160deg, rgba(124,58,237,.12) 0%, transparent 60%);
+  pointer-events: none;
+}
+.veeya-avatar { font-size: 3rem; filter: drop-shadow(0 3px 10px rgba(0,0,0,.5)); line-height: 1; }
+.veeya-name   { font-size: 1.1rem; font-weight: 800; color: var(--text); }
+.veeya-grade-label {
+  font-size: .78rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+  background: linear-gradient(135deg, var(--purple-mid), var(--purple-neon));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.veeya-stats {
+  font-size: .72rem; color: var(--text-muted); text-align: center;
+  min-height: 32px; line-height: 1.5;
+}
+.veeya-cta {
+  margin-top: 4px;
+  font-size: .85rem; font-weight: 700; color: var(--purple-soft);
+  background: rgba(124,58,237,.18); border: 1px solid rgba(155,89,245,.3);
+  border-radius: 999px; padding: 5px 18px;
+  transition: background .15s;
+}
+.veeya-card:hover .veeya-cta { background: rgba(124,58,237,.35); }
 
-.add-profile-btn { margin-top: 18px; }
+/* Sync row on welcome */
+.welcome-sync-row {
+  display: flex; justify-content: center;
+  padding: 8px 20px 24px;
+}
+.sync-link-btn {
+  font-size: .85rem; color: var(--text-muted);
+  text-decoration: underline; text-underline-offset: 3px;
+}
+.sync-link-btn:hover { color: var(--purple-soft); }
 
-/* ── Avatar picker ───────────────────────────────────────────── */
+/* ── Avatar picker (kept for potential future use) ───────────── */
 .avatar-picker { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 14px; }
 .avatar-opt {
   font-size: 1.8rem; width: 50px; height: 50px;

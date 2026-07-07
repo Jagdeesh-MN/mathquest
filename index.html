@@ -4,8 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-  <meta http-equiv="Pragma" content="no-cache" />
-  <meta http-equiv="Expires" content="0" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="MathQuest" />
@@ -13,80 +11,76 @@
   <meta name="theme-color" content="#0D0B1A" />
   <link rel="apple-touch-icon" href="icon.png" />
   <link rel="manifest" href="manifest.json" />
-  <title>MathQuest — Grade 5 &amp; 6</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>MathQuest — Veeya</title>
+  <link rel="stylesheet" href="style.css?v=5" />
 </head>
 <body>
 
-<!-- Sparkle background canvas -->
 <canvas id="sparkle-canvas"></canvas>
 
-<!-- ═══════════════════════════════════════════════════════════
-     SCREEN: WELCOME
-════════════════════════════════════════════════════════════ -->
+<!-- ═══════════════════════════ WELCOME ═══════════════════════════ -->
 <div id="screen-welcome" class="screen active">
   <div class="welcome-hero">
     <div class="logo-mark">🧮</div>
     <h1>MathQuest</h1>
-    <p class="tagline">Grade 5 &amp; 6 Math Adventures</p>
+    <p class="tagline">Hi Veeya! Which grade today?</p>
   </div>
 
-  <div class="profile-section">
-    <h2>Who's practicing today?</h2>
-    <div id="profile-list" class="profile-grid"></div>
-    <div class="welcome-btns">
-      <button class="btn btn-primary add-profile-btn" id="btn-add-profile">+ New Player</button>
-      <button class="btn btn-outline" id="btn-open-load">📂 Load Progress</button>
-    </div>
+  <div class="veeya-select">
+    <!-- Grade 5 card -->
+    <button class="veeya-card" id="btn-veeya5">
+      <div class="veeya-avatar">🦁</div>
+      <div class="veeya-name">Veeya</div>
+      <div class="veeya-grade-label">Grade 5</div>
+      <div class="veeya-stats" id="vstats-5">Loading…</div>
+      <div class="veeya-cta">Start →</div>
+    </button>
+
+    <!-- Grade 6 card -->
+    <button class="veeya-card" id="btn-veeya6">
+      <div class="veeya-avatar">🦋</div>
+      <div class="veeya-name">Veeya</div>
+      <div class="veeya-grade-label">Grade 6</div>
+      <div class="veeya-stats" id="vstats-6">Loading…</div>
+      <div class="veeya-cta">Start →</div>
+    </button>
   </div>
 
-  <!-- Add profile modal -->
-  <div id="modal-add-profile" class="modal hidden">
+  <!-- Sync from another device -->
+  <div class="welcome-sync-row">
+    <button class="btn btn-ghost sync-link-btn" id="btn-welcome-sync">
+      📱 Sync from another device
+    </button>
+  </div>
+
+  <!-- Sync / Load modal (welcome screen) -->
+  <div id="modal-welcome-sync" class="modal hidden">
     <div class="modal-card">
-      <h3>✨ New Player</h3>
-      <div class="avatar-picker" id="avatar-picker"></div>
-      <input type="text" id="input-profile-name" placeholder="Enter your name…" maxlength="20" autocomplete="off" />
-      <div class="grade-row">
-        <button class="grade-chip" data-grade="5">Grade 5</button>
-        <button class="grade-chip" data-grade="6">Grade 6</button>
-      </div>
-      <div class="modal-actions">
-        <button class="btn btn-ghost" id="btn-cancel-profile">Cancel</button>
-        <button class="btn btn-primary" id="btn-save-profile">Let's Go! 🚀</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Load progress modal -->
-  <div id="modal-load" class="modal hidden save-resume-modal">
-    <div class="modal-card">
-      <h3>📂 Load Progress</h3>
-      <p style="font-size:.85rem;color:var(--text-muted);margin-bottom:16px;">Paste your save code to restore progress on any device.</p>
-      <label class="save-section">
-        <span>Paste Save Code:</span>
-        <textarea id="input-load-code" class="save-code-box" rows="5" placeholder="Paste your save code here…"></textarea>
-      </label>
+      <h3>📱 Sync Progress</h3>
+      <p style="font-size:.85rem;color:var(--text-muted);margin-bottom:14px;">
+        Paste a sync code or link from your other device to restore all of Veeya's progress here.
+      </p>
+      <textarea id="input-sync-code" class="save-code-box" rows="5"
+        placeholder="Paste sync code or link here…"></textarea>
       <div class="modal-actions" style="margin-top:14px;">
-        <button class="btn btn-ghost" id="btn-cancel-load">Cancel</button>
-        <button class="btn btn-primary" id="btn-confirm-load">Load ✓</button>
+        <button class="btn btn-ghost" id="btn-cancel-sync">Cancel</button>
+        <button class="btn btn-primary" id="btn-confirm-sync">Sync ✓</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════════
-     SCREEN: DASHBOARD
-════════════════════════════════════════════════════════════ -->
+<!-- ═══════════════════════════ DASHBOARD ═══════════════════════════ -->
 <div id="screen-dashboard" class="screen">
   <header class="dash-header">
-    <button class="icon-btn" id="btn-switch-profile" title="Switch player">👤</button>
+    <button class="icon-btn" id="btn-switch-profile" title="Switch grade">←</button>
     <div class="header-center">
       <span id="hdr-player-name" class="player-name"></span>
       <span id="hdr-grade-badge" class="grade-badge"></span>
     </div>
     <div class="xp-pill" id="hdr-xp">⭐ 0 XP</div>
     <div class="header-actions">
-      <button class="icon-btn" id="btn-open-save" title="Save / Load progress">💾</button>
+      <button class="icon-btn" id="btn-open-save" title="Sync progress">📱</button>
       <button class="icon-btn" id="btn-open-achievements" title="Achievements">🏆</button>
     </div>
   </header>
@@ -106,17 +100,10 @@
     </div>
   </div>
 
-  <div class="grade-tabs" id="grade-tabs">
-    <button class="grade-tab active" data-grade="5">Grade 5</button>
-    <button class="grade-tab" data-grade="6">Grade 6</button>
-  </div>
-
   <div id="domain-list" class="domain-list"></div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════════
-     SCREEN: SKILLS
-════════════════════════════════════════════════════════════ -->
+<!-- ═══════════════════════════ SKILLS ═══════════════════════════ -->
 <div id="screen-skills" class="screen">
   <header class="sub-header">
     <button class="icon-btn back-btn" id="btn-back-skills">←</button>
@@ -125,9 +112,7 @@
   <div id="skill-list" class="skill-list"></div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════════
-     SCREEN: LESSON
-════════════════════════════════════════════════════════════ -->
+<!-- ═══════════════════════════ LESSON ═══════════════════════════ -->
 <div id="screen-lesson" class="screen">
   <header class="sub-header">
     <button class="icon-btn back-btn" id="btn-back-lesson">←</button>
@@ -139,9 +124,7 @@
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════════
-     SCREEN: PRACTICE
-════════════════════════════════════════════════════════════ -->
+<!-- ═══════════════════════════ PRACTICE ═══════════════════════════ -->
 <div id="screen-practice" class="screen">
   <header class="practice-header">
     <button class="icon-btn back-btn" id="btn-exit-practice" title="Back">←</button>
@@ -172,9 +155,7 @@
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════════
-     SCREEN: RESULTS
-════════════════════════════════════════════════════════════ -->
+<!-- ═══════════════════════════ RESULTS ═══════════════════════════ -->
 <div id="screen-results" class="screen">
   <div class="results-card card">
     <div class="results-emoji" id="results-emoji"></div>
@@ -196,9 +177,7 @@
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════════════
-     SCREEN: ACHIEVEMENTS
-════════════════════════════════════════════════════════════ -->
+<!-- ═══════════════════════════ ACHIEVEMENTS ═══════════════════════════ -->
 <div id="screen-achievements" class="screen">
   <header class="sub-header">
     <button class="icon-btn back-btn" id="btn-back-achievements">←</button>
@@ -207,46 +186,34 @@
   <div id="achievements-list" class="achievements-list"></div>
 </div>
 
-<!-- Save/Load modal (dashboard) -->
+<!-- Sync modal (from dashboard) -->
 <div id="modal-save-load" class="modal hidden save-resume-modal">
   <div class="modal-card">
-    <h3>💾 Save &amp; Sync Progress</h3>
+    <h3>📱 Sync Progress</h3>
     <div class="tab-row">
-      <button class="tab-btn active" data-tab="save">Save</button>
-      <button class="tab-btn" data-tab="load">Load</button>
-      <button class="tab-btn" data-tab="sync">📱 Sync</button>
+      <button class="tab-btn active" data-tab="sync-out">Share</button>
+      <button class="tab-btn" data-tab="sync-in">Load</button>
     </div>
 
-    <div class="tab-pane active" id="tab-save">
-      <p style="font-size:.82rem;color:var(--text-muted);margin-bottom:10px;">Copy this code to continue on any device.</p>
-      <label class="save-section">
-        <span>Your Save Code:</span>
-        <textarea id="save-code-output" class="save-code-box" rows="5" readonly></textarea>
-      </label>
-      <div class="save-row">
-        <button class="btn btn-primary" id="btn-copy-code">📋 Copy Code</button>
-        <button class="btn btn-outline" id="btn-download-save">⬇ Download</button>
+    <div class="tab-pane active" id="tab-sync-out">
+      <p style="font-size:.82rem;color:var(--text-muted);margin-bottom:12px;">
+        Scan the QR code or copy the link to open on any other device with all progress intact.
+      </p>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:12px;">
+        <div id="qr-code" style="background:#fff;padding:12px;border-radius:12px;"></div>
+        <button class="btn btn-primary" id="btn-copy-sync-url" style="width:100%">🔗 Copy Sync Link</button>
+        <button class="btn btn-outline" id="btn-download-save" style="width:100%">⬇ Download Save File</button>
       </div>
     </div>
 
-    <div class="tab-pane" id="tab-load">
-      <p style="font-size:.82rem;color:var(--text-muted);margin-bottom:10px;">Paste a save code to restore your progress.</p>
-      <label class="save-section">
-        <span>Paste Save Code:</span>
-        <textarea id="load-code-input" class="save-code-box" rows="5" placeholder="Paste your save code here…"></textarea>
-      </label>
-      <div class="save-row">
+    <div class="tab-pane" id="tab-sync-in">
+      <p style="font-size:.82rem;color:var(--text-muted);margin-bottom:10px;">
+        Paste a sync link or code from another device.
+      </p>
+      <textarea id="load-code-input" class="save-code-box" rows="5" placeholder="Paste sync code or link…"></textarea>
+      <div class="save-row" style="margin-top:10px;">
         <button class="btn btn-primary" id="btn-apply-load">✓ Load Progress</button>
       </div>
-    </div>
-
-    <div class="tab-pane" id="tab-sync">
-      <p style="font-size:.82rem;color:var(--text-muted);margin-bottom:12px;">Scan this QR code on your iPad (or any device) to instantly load your progress.</p>
-      <div id="qr-container" style="display:flex;flex-direction:column;align-items:center;gap:12px;">
-        <div id="qr-code" style="background:#fff;padding:12px;border-radius:12px;"></div>
-        <button class="btn btn-outline" id="btn-copy-sync-url" style="width:100%">🔗 Copy Sync Link</button>
-      </div>
-      <p style="font-size:.75rem;color:var(--text-muted);margin-top:10px;text-align:center;">The link contains your full save data — no account needed.</p>
     </div>
 
     <button class="btn btn-ghost" id="btn-close-save-load" style="width:100%;margin-top:12px;">Close</button>
@@ -257,8 +224,8 @@
 <canvas id="confetti-canvas"></canvas>
 
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
-<script src="curriculum.js?v=4"></script>
-<script src="questions.js?v=4"></script>
-<script src="app.js?v=4"></script>
+<script src="curriculum.js?v=5"></script>
+<script src="questions.js?v=5"></script>
+<script src="app.js?v=5"></script>
 </body>
 </html>
