@@ -174,13 +174,16 @@ GENERATORS["5-X.4"]=()=>{
 };
 
 GENERATORS["5-AA.13"]=()=>{
-  const a=dec(rnd(10,200)/10,1),b=dec(rnd(10,200)/10,1);
+  const a=dec(rnd(15,200)/10,1),b=dec(rnd(15,200)/10,1);
   const ra=Math.round(a),rb=Math.round(b);
   const isAdd=Math.random()<.5;
+  const correct=isAdd?ra+rb:Math.max(ra-rb,1);
+  // ensure 3 distinct wrong options far enough from correct
+  const wrongs=[correct+1,correct+2,correct-1].filter(x=>x>0&&x!==correct).slice(0,3);
   return{type:"mc",typeBadge:"Estimate Decimals",
     question:`Estimate <strong>${a} ${isAdd?"+":"−"} ${b}</strong> by rounding to the nearest whole number.`,
-    options:mcOpts(isAdd?ra+rb:ra-rb,...wrongNear(isAdd?ra+rb:ra-rb,3,5)),
-    answer:String(isAdd?ra+rb:ra-rb)};
+    options:shuffle([String(correct),...wrongs.map(String)]),
+    answer:String(correct)};
 };
 
 GENERATORS["5-BB.1"]=()=>{
@@ -1295,9 +1298,11 @@ GENERATORS["5-QQ.6"]=()=>{
     {name:"Trapezoid",clue:"exactly 1 pair of parallel sides"},
   ];
   const q=pick(quads);
+  // Always build 4 options that include the answer
+  const others=shuffle(quads.filter(x=>x.name!==q.name)).slice(0,3).map(x=>x.name);
   return{type:"mc",typeBadge:"Classify Quadrilaterals",
     question:`Which quadrilateral has <strong>${q.clue}</strong>?`,
-    options:shuffle(quads.map(x=>x.name)).slice(0,4).concat([q.name]).filter((v,i,a)=>a.indexOf(v)===i).slice(0,4),
+    options:shuffle([q.name,...others]),
     answer:q.name};
 };
 
@@ -2225,6 +2230,41 @@ GENERATORS["6-S.2"]=()=>{
   ];
   const item=pick(qs);
   return{type:"mc",typeBadge:"Describe Distributions",question:item.q,options:shuffle(item.opts),answer:item.a};
+};
+
+GENERATORS["5-NN.6"]=()=>{
+  const months=["Jan","Feb","Mar","Apr","May","Jun"];
+  const data=months.map(()=>rnd(15,40));
+  const maxIdx=data.indexOf(Math.max(...data));
+  const minIdx=data.indexOf(Math.min(...data));
+  const isMax=Math.random()<.5;
+  const answer=months[isMax?maxIdx:minIdx];
+  // always include the correct answer + 3 other months as distractors
+  const others=shuffle(months.filter(m=>m!==answer)).slice(0,3);
+  return{type:"mc",typeBadge:"Line Graphs",
+    question:`A line graph shows temperatures: ${months.map((m,i)=>`${m}:${data[i]}°`).join(", ")}.<br>Which month had the <strong>${isMax?"highest":"lowest"}</strong> temperature?`,
+    options:shuffle([answer,...others]),
+    answer};
+};
+
+GENERATORS["5-NN.8"]=()=>{
+  const subjects=["Math","Reading","Science","Art","PE"];
+  const vals=subjects.map(()=>rnd(10,40));
+  const qi=rnd(0,4);
+  return{type:"mc",typeBadge:"Create Bar Graphs",
+    question:`A bar graph shows students' votes: ${subjects.map((s,i)=>`${s}:${vals[i]}`).join(", ")}.<br>How many students voted for <strong>${subjects[qi]}</strong>?`,
+    options:shuffle([vals[qi],...[vals[qi]+5,vals[qi]-5,vals[qi]+10].filter(x=>x>0&&x!==vals[qi])].slice(0,4).map(String)),
+    answer:String(vals[qi])};
+};
+
+GENERATORS["6-R.2"]=()=>{
+  const intervals=["0–9","10–19","20–29","30–39"];
+  const counts=intervals.map(()=>rnd(2,12));
+  const qi=rnd(0,3);
+  return{type:"mc",typeBadge:"Create Histograms",
+    question:`Data values are grouped into intervals: ${intervals.map((iv,i)=>`${iv}: ${counts[i]} values`).join(", ")}.<br>Which interval has the <strong>most</strong> values?`,
+    options:shuffle(intervals),
+    answer:intervals[counts.indexOf(Math.max(...counts))]};
 };
 
 // ════════════════════════════════════════════════════
