@@ -502,11 +502,51 @@ function openLesson(skillId) {
   const lesson = LESSONS[skillId];
   document.getElementById("lesson-title").textContent = skill?.name || skillId;
   const body = document.getElementById("lesson-body");
-  body.innerHTML = lesson ? lesson.body
-    : `<h3>${skill?.name || skillId}</h3>
-       <p>Practice this skill to improve your understanding. Questions are matched exactly to the Grade ${skillId[0]} curriculum standard.</p>
-       <div class="tip">💡 Read each question carefully and show your work!</div>`;
+
+  // Always generate 2 worked examples from the skill's own question generator
+  const examples = buildWorkedExamples(skillId, 2);
+
+  if (lesson) {
+    body.innerHTML = lesson.body + examples;
+  } else {
+    body.innerHTML = `
+      <h3>${skill?.name || skillId}</h3>
+      <p>Study the worked examples below, then hit <strong>Practice Now</strong> to try questions yourself.</p>
+      ${examples}`;
+  }
   showScreen("lesson");
+}
+
+/* Build HTML showing worked examples for a skill */
+function buildWorkedExamples(skillId, count) {
+  let html = `<div class="worked-examples">
+    <div class="examples-heading">📝 Worked Examples</div>`;
+  for (let i = 0; i < count; i++) {
+    try {
+      const q = generateQuestion(skillId);
+      if (!q || !q.question) continue;
+      html += `<div class="example-block">
+        <div class="example-num">Example ${i + 1}</div>
+        <div class="example-q">${q.question}</div>`;
+      if (q.hint) {
+        html += `<div class="example-hint">💡 ${q.hint}</div>`;
+      }
+      // Show solution steps based on question type
+      if (q.type === 'mc' && q.options) {
+        html += `<div class="example-options">`;
+        q.options.forEach(opt => {
+          const isAns = String(opt) === String(q.answer);
+          html += `<div class="example-option ${isAns ? 'example-correct' : ''}">${isAns ? '✓ ' : ''}${opt}</div>`;
+        });
+        html += `</div>`;
+      } else {
+        html += `<div class="example-answer"><span class="ans-label">Answer:</span> <strong>${q.answer}</strong></div>`;
+      }
+      html += `</div>`;
+    } catch(e) { /* skip broken */ }
+  }
+  html += `</div>`;
+  return html;
 }
 
 /* ═══════════════════════════════════════════════════════════════

@@ -397,6 +397,58 @@ body::before {
   background: rgba(252,211,77,.08); border: 1px solid rgba(252,211,77,.25);
   border-radius: var(--radius); padding: 12px; margin-top: 14px; font-size: .9rem; color: var(--gold);
 }
+
+/* ── Worked Examples ─────────────────────────────────────────── */
+.worked-examples {
+  margin-top: 18px;
+}
+.examples-heading {
+  font-size: .78rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .08em; color: var(--text-muted); margin-bottom: 10px;
+}
+.example-block {
+  background: rgba(124,58,237,.13);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  margin-bottom: 12px;
+}
+.example-num {
+  font-size: .72rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .06em; color: var(--purple-soft); margin-bottom: 8px;
+}
+.example-q {
+  font-size: 1rem; font-weight: 600; color: var(--text);
+  line-height: 1.5; margin-bottom: 10px;
+}
+.example-hint {
+  font-size: .82rem; color: var(--gold);
+  background: rgba(252,211,77,.07); border: 1px solid rgba(252,211,77,.2);
+  border-radius: var(--radius-sm); padding: 7px 10px;
+  margin-bottom: 10px;
+}
+.example-answer {
+  background: rgba(52,211,153,.1); border: 1px solid rgba(52,211,153,.25);
+  border-radius: var(--radius-sm); padding: 9px 12px;
+  font-size: .95rem; color: var(--text);
+}
+.ans-label {
+  font-size: .75rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .05em; color: var(--green); margin-right: 6px;
+}
+.example-options {
+  display: flex; flex-direction: column; gap: 5px;
+}
+.example-option {
+  padding: 7px 12px; border-radius: var(--radius-sm);
+  font-size: .92rem; color: var(--text-muted);
+  background: rgba(255,255,255,.04); border: 1px solid var(--border);
+}
+.example-option.example-correct {
+  background: rgba(52,211,153,.12); border-color: rgba(52,211,153,.4);
+  color: var(--green); font-weight: 700;
+}
+
 .lesson-nav { padding: 14px; }
 .lesson-nav .btn { width: 100%; }
 
