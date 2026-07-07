@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="MathQuest" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="theme-color" content="#0D0B1A" />
+  <link rel="apple-touch-icon" href="icon.png" />
+  <link rel="manifest" href="manifest.json" />
+  <title>MathQuest — Grade 5 &amp; 6</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- Sparkle background canvas -->
+<canvas id="sparkle-canvas"></canvas>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SCREEN: WELCOME
+════════════════════════════════════════════════════════════ -->
+<div id="screen-welcome" class="screen active">
+  <div class="welcome-hero">
+    <div class="logo-mark">🧮</div>
+    <h1>MathQuest</h1>
+    <p class="tagline">Grade 5 &amp; 6 Math Adventures</p>
+  </div>
+
+  <div class="profile-section">
+    <h2>Who's practicing today?</h2>
+    <div id="profile-list" class="profile-grid"></div>
+    <div class="welcome-btns">
+      <button class="btn btn-primary add-profile-btn" id="btn-add-profile">+ New Player</button>
+      <button class="btn btn-outline" id="btn-open-load">📂 Load Progress</button>
+    </div>
+  </div>
+
+  <!-- Add profile modal -->
+  <div id="modal-add-profile" class="modal hidden">
+    <div class="modal-card">
+      <h3>✨ New Player</h3>
+      <div class="avatar-picker" id="avatar-picker"></div>
+      <input type="text" id="input-profile-name" placeholder="Enter your name…" maxlength="20" autocomplete="off" />
+      <div class="grade-row">
+        <button class="grade-chip" data-grade="5">Grade 5</button>
+        <button class="grade-chip" data-grade="6">Grade 6</button>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" id="btn-cancel-profile">Cancel</button>
+        <button class="btn btn-primary" id="btn-save-profile">Let's Go! 🚀</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Load progress modal -->
+  <div id="modal-load" class="modal hidden save-resume-modal">
+    <div class="modal-card">
+      <h3>📂 Load Progress</h3>
+      <p style="font-size:.85rem;color:var(--text-muted);margin-bottom:16px;">Paste your save code to restore progress on any device.</p>
+      <label class="save-section">
+        <span>Paste Save Code:</span>
+        <textarea id="input-load-code" class="save-code-box" rows="5" placeholder="Paste your save code here…"></textarea>
+      </label>
+      <div class="modal-actions" style="margin-top:14px;">
+        <button class="btn btn-ghost" id="btn-cancel-load">Cancel</button>
+        <button class="btn btn-primary" id="btn-confirm-load">Load ✓</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SCREEN: DASHBOARD
+════════════════════════════════════════════════════════════ -->
+<div id="screen-dashboard" class="screen">
+  <header class="dash-header">
+    <button class="icon-btn" id="btn-switch-profile" title="Switch player">👤</button>
+    <div class="header-center">
+      <span id="hdr-player-name" class="player-name"></span>
+      <span id="hdr-grade-badge" class="grade-badge"></span>
+    </div>
+    <div class="xp-pill" id="hdr-xp">⭐ 0 XP</div>
+    <div class="header-actions">
+      <button class="icon-btn" id="btn-open-save" title="Save / Load progress">💾</button>
+      <button class="icon-btn" id="btn-open-achievements" title="Achievements">🏆</button>
+    </div>
+  </header>
+
+  <div class="progress-summary card">
+    <div class="streak-block">
+      <span class="streak-fire">🔥</span>
+      <div>
+        <div class="streak-num" id="dash-streak">0</div>
+        <div class="streak-lbl">Day streak</div>
+      </div>
+    </div>
+    <div class="overall-bar-wrap">
+      <div class="bar-label">Overall progress</div>
+      <div class="progress-bar-bg"><div class="progress-bar-fill" id="dash-overall-bar"></div></div>
+      <div class="bar-pct" id="dash-overall-pct">0%</div>
+    </div>
+  </div>
+
+  <div class="grade-tabs" id="grade-tabs">
+    <button class="grade-tab active" data-grade="5">Grade 5</button>
+    <button class="grade-tab" data-grade="6">Grade 6</button>
+  </div>
+
+  <div id="domain-list" class="domain-list"></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SCREEN: SKILLS
+════════════════════════════════════════════════════════════ -->
+<div id="screen-skills" class="screen">
+  <header class="sub-header">
+    <button class="icon-btn back-btn" id="btn-back-skills">←</button>
+    <h2 id="skill-domain-title" class="sub-title"></h2>
+  </header>
+  <div id="skill-list" class="skill-list"></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SCREEN: LESSON
+════════════════════════════════════════════════════════════ -->
+<div id="screen-lesson" class="screen">
+  <header class="sub-header">
+    <button class="icon-btn back-btn" id="btn-back-lesson">←</button>
+    <h2 id="lesson-title" class="sub-title"></h2>
+  </header>
+  <div id="lesson-body" class="lesson-body card"></div>
+  <div class="lesson-nav">
+    <button class="btn btn-primary" id="btn-start-practice">Practice Now ✨</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SCREEN: PRACTICE
+════════════════════════════════════════════════════════════ -->
+<div id="screen-practice" class="screen">
+  <header class="practice-header">
+    <button class="icon-btn back-btn" id="btn-exit-practice" title="Back">←</button>
+    <div class="practice-meta">
+      <span id="prac-skill-name" class="prac-skill-name"></span>
+      <div class="prac-progress-dots" id="prac-dots"></div>
+    </div>
+    <div class="lives-row" id="prac-lives"></div>
+    <div class="prac-avatar-wrap">
+      <div class="prac-avatar" id="prac-avatar-icon"></div>
+      <div class="prac-avatar-name" id="prac-avatar-name"></div>
+    </div>
+  </header>
+
+  <div class="question-card card" id="question-card">
+    <div class="question-type-badge" id="q-type-badge"></div>
+    <div class="question-text" id="q-text"></div>
+    <div class="question-visual" id="q-visual"></div>
+    <div class="question-options" id="q-options"></div>
+    <div class="question-input-area" id="q-input-area"></div>
+    <div class="drag-drop-area" id="q-drag-area"></div>
+  </div>
+
+  <div id="feedback-bar" class="feedback-bar hidden">
+    <span id="feedback-icon"></span>
+    <span id="feedback-msg"></span>
+    <button class="btn btn-ghost" id="btn-next-question">Continue →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SCREEN: RESULTS
+════════════════════════════════════════════════════════════ -->
+<div id="screen-results" class="screen">
+  <div class="results-card card">
+    <div class="results-emoji" id="results-emoji"></div>
+    <h2 id="results-heading"></h2>
+    <div class="results-stats">
+      <div class="stat-box"><div class="stat-num" id="res-correct">0</div><div class="stat-lbl">Correct</div></div>
+      <div class="stat-box"><div class="stat-num" id="res-pct">0%</div><div class="stat-lbl">Accuracy</div></div>
+      <div class="stat-box"><div class="stat-num" id="res-xp">+0</div><div class="stat-lbl">XP Earned</div></div>
+    </div>
+    <div class="skill-level-row">
+      <span class="lbl">Skill level:</span>
+      <div class="skill-stars" id="res-stars"></div>
+    </div>
+    <div class="results-actions">
+      <button class="btn btn-outline" id="btn-retry-skill">↺ Try Again</button>
+      <button class="btn btn-primary" id="btn-next-skill">Next Skill →</button>
+    </div>
+    <button class="btn btn-ghost" id="btn-results-home">← Dashboard</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SCREEN: ACHIEVEMENTS
+════════════════════════════════════════════════════════════ -->
+<div id="screen-achievements" class="screen">
+  <header class="sub-header">
+    <button class="icon-btn back-btn" id="btn-back-achievements">←</button>
+    <h2 class="sub-title">🏆 Achievements</h2>
+  </header>
+  <div id="achievements-list" class="achievements-list"></div>
+</div>
+
+<!-- Save/Load modal (dashboard) -->
+<div id="modal-save-load" class="modal hidden save-resume-modal">
+  <div class="modal-card">
+    <h3>💾 Save &amp; Sync Progress</h3>
+    <div class="tab-row">
+      <button class="tab-btn active" data-tab="save">Save</button>
+      <button class="tab-btn" data-tab="load">Load</button>
+      <button class="tab-btn" data-tab="sync">📱 Sync</button>
+    </div>
+
+    <div class="tab-pane active" id="tab-save">
+      <p style="font-size:.82rem;color:var(--text-muted);margin-bottom:10px;">Copy this code to continue on any device.</p>
+      <label class="save-section">
+        <span>Your Save Code:</span>
+        <textarea id="save-code-output" class="save-code-box" rows="5" readonly></textarea>
+      </label>
+      <div class="save-row">
+        <button class="btn btn-primary" id="btn-copy-code">📋 Copy Code</button>
+        <button class="btn btn-outline" id="btn-download-save">⬇ Download</button>
+      </div>
+    </div>
+
+    <div class="tab-pane" id="tab-load">
+      <p style="font-size:.82rem;color:var(--text-muted);margin-bottom:10px;">Paste a save code to restore your progress.</p>
+      <label class="save-section">
+        <span>Paste Save Code:</span>
+        <textarea id="load-code-input" class="save-code-box" rows="5" placeholder="Paste your save code here…"></textarea>
+      </label>
+      <div class="save-row">
+        <button class="btn btn-primary" id="btn-apply-load">✓ Load Progress</button>
+      </div>
+    </div>
+
+    <div class="tab-pane" id="tab-sync">
+      <p style="font-size:.82rem;color:var(--text-muted);margin-bottom:12px;">Scan this QR code on your iPad (or any device) to instantly load your progress.</p>
+      <div id="qr-container" style="display:flex;flex-direction:column;align-items:center;gap:12px;">
+        <div id="qr-code" style="background:#fff;padding:12px;border-radius:12px;"></div>
+        <button class="btn btn-outline" id="btn-copy-sync-url" style="width:100%">🔗 Copy Sync Link</button>
+      </div>
+      <p style="font-size:.75rem;color:var(--text-muted);margin-top:10px;text-align:center;">The link contains your full save data — no account needed.</p>
+    </div>
+
+    <button class="btn btn-ghost" id="btn-close-save-load" style="width:100%;margin-top:12px;">Close</button>
+  </div>
+</div>
+
+<div id="toast" class="toast hidden"></div>
+<canvas id="confetti-canvas"></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<script src="curriculum.js"></script>
+<script src="questions.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
